@@ -1,13 +1,23 @@
-- name: Install Nginx on Amazon Linux 2
+---
+- name: Configure web servers
   hosts: web
   become: yes
+
   vars:
     web_message: "Hello from Ansible on {{ inventory_hostname }}"
+
   tasks:
-    - name: Enable nginx in amazon-linux-extras
-      amazon.aws.aws_ami_extras:
-        name: nginx1
-        state: enabled
+    - name: Update packages
+      yum:
+        name: "*"
+        state: latest
+      when: ansible_distribution == "Amazon"
+
+    - name: Enable nginx via amazon-linux-extras
+      command: amazon-linux-extras enable nginx1
+      args:
+        creates: /etc/yum.repos.d/amzn2extra-nginx1.repo
+      when: ansible_distribution == "Amazon"
 
     - name: Install Nginx
       yum:
@@ -22,7 +32,7 @@
 
     - name: Create index.html
       copy:
-        content: "Hello from {{ inventory_hostname }}"
+        content: "{{ web_message }}"
         dest: /usr/share/nginx/html/index.html
       notify: Restart nginx
 
