@@ -1,0 +1,108 @@
+# ========================================
+# terraform.tfvars.example
+# Fill this file and save as terraform.tfvars
+# ========================================
+
+# General project info
+app_name    = "my-project"
+environment = "dev"
+
+# VPC configuration
+vpc_cidr_block = "10.0.0.0/16"
+
+# Public subnets
+public_subnets = {
+  eu-north-1a = { cidr_block = "10.0.1.0/24" }
+  eu-north-1b = { cidr_block = "10.0.2.0/24" }
+}
+
+# Private subnets
+private_subnets = {
+  app-a = {
+    cidr_block        = "10.0.10.0/24"
+    availability_zone = "eu-north-1b"
+  }
+  app-b = {
+    cidr_block        = "10.0.11.0/24"
+    availability_zone = "eu-north-1a"
+  }
+  db-a = {
+    cidr_block        = "10.0.20.0/24"
+    availability_zone = "eu-north-1a"
+  }
+}
+
+# Security groups
+security_groups = {
+  public = {
+    description = "Public access (ALB / Bastion)"
+    ingress = [
+      {
+        from_port   = 8080
+        to_port     = 8080
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"] # Open web port
+      },
+      {
+        from_port   = 22
+        to_port     = 22
+        protocol    = "tcp"
+        cidr_blocks = ["YOUR_IP_HERE/32"] # Replace with your IP
+      },
+      {
+        from_port   = 443
+        to_port     = 443
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"] # HTTPS
+      }
+    ]
+    extra_tags = {
+      Tier = "edge"
+    }
+  }
+
+  app = {
+    description = "Application tier"
+    ingress = [
+      {
+        from_port   = 8080
+        to_port     = 8080
+        protocol    = "tcp"
+        cidr_blocks = ["10.0.0.0/16"] # Internal traffic only
+      }
+    ]
+    extra_tags = {
+      Tier = "app"
+    }
+  }
+}
+
+# SSH public key path
+public_key_path = "~/.ssh/id_ed25519.pub"
+
+# EC2 instances configuration
+instances = {
+  "web-server" = {
+    instance_type = "t3.micro"
+    subnet_role   = "public"
+    # iam_instance_profile = "web-server-profile"
+    extra_tags = {
+      Backup = "true"
+    }
+  }
+
+  "monitoring-server" = {
+    instance_type = "t3.micro"
+    subnet_role   = "public"
+    # iam_instance_profile = "monitoring-server-profile"
+    extra_tags = {
+      ManagedBy = "Terraform"
+      Backup    = "true"
+    }
+  }
+}
+
+# AMI selection
+ami_owners       = ["amazon"]
+ami_name_pattern = "amzn2-ami-hvm-*-x86_64-gp2"
+
