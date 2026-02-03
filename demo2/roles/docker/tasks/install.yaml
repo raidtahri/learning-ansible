@@ -1,0 +1,11 @@
+- name: Install Docker packages
+  yum:
+    name: "{{ docker_packages }}"
+    state: present
+
+- name: Add users to docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: yes
+  loop: "{{ docker_users }}"

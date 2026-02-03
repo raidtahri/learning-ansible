@@ -1,0 +1,6 @@
+- name: Load Amazon Linux vars
+  include_vars: amazon.yaml
+  
+- import_tasks: install.yaml
+- import_tasks: service.yaml
+- import_tasks: compose.yaml

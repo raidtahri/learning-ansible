@@ -1,0 +1,10 @@
+- name: Bootstrap servers
+  hosts: all
+  gather_facts: yes
+  
+  roles:
+    - role: common
+      become: true
+
+    - role: docker
+      become: true
