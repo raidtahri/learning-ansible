@@ -32,7 +32,7 @@
 
     - name: Create index.html
       copy:
-        content: "{{ web_message }}"
+        content: "{{ web_message }}" #we always use double quotes to ensure safe variable interpolation handeling special characters and spaces and dots correctly
         dest: /usr/share/nginx/html/index.html
       notify: Restart nginx
 
