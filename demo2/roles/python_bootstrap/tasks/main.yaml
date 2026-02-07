@@ -1,0 +1,77 @@
+- name: Install Python 3.11 on Amazon Linux 2
+  raw: | 
+    sudo amazon-linux-extras enable python3.11
+    udo yum install -y python3.11
+  changed_when: false
+  check_mode: no
+- name: Set Python interpreter
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3.11
+
+
+#raw is an Ansible module that executes plain shell commands directly on the remote host without going through the normal Ansible module logic.
+
+#The | after raw: is YAML syntax for multiline strings. It means “everything indented below this line is part of this string.” so:
+#raw: |
+  #command1
+  #command2
+
+
+#on the remote machine.
+
+#Normally, with other modules like yum, apt, file, etc., you don’t need | because the module takes structured arguments.
+
+#Here we use raw instead of yum because, on a fresh Amazon Linux 2 instance, Python 3 may not be installed yet. Ansible requires Python on the target to run most modules. So before any module like yum can be used, we need Python.
+
+#raw can run commands even if Python is not installed, which is perfect for bootstrapping Python.
+
+
+
+
+
+
+
+
+
+
+
+#his sets the Python interpreter dynamically at runtime for this specific host during this playbook run.
+
+#Why is this needed here:
+
+#We just installed Python 3.9 via raw.
+
+#Before this, Ansible didn’t have Python 3.9 to use — the default interpreter (maybe Python 2.7) may not work properly for modern modules.
+
+#Once Python 3.9 exists, we immediately tell Ansible to use it, so all subsequent tasks in this playbook will run with Python 3.9.
+
+#Using set_fact is immediate and temporary — it applies only for this playbook run. That’s exactly what you want for bootstrapping scenarios.
+
+
+
+#Why not in ansible.cfg or inventory/group_vars
+#On a fresh host, Python 3.9 doesn’t exist yet, so pointing Ansible to /usr/bin/python3.9 would fail.
+#Ansible would try to use a non-existent Python and error out.
+#That’s why we wait until Python is installed, then set the interpreter dynamically with set_fact
+
+
+
+
+
+
+
+#changed_when: False
+#Normally Ansible marks a task as “changed” if it did something.
+#Here, we don’t want this raw command to ever be reported as changed, even if it installed Python.
+
+#Why? Often for bootstrap tasks, reporting “changed” isn’t meaningful. Or we just want Ansible to not think it modified anything.
+
+
+
+
+
+#check_mode: no
+#Check mode (ansible-playbook --check) is like a dry-run: Ansible simulates what would happen without actually changing anything.
+#By default, raw can be skipped in check mode.
+#Setting check_mode: no forces it to always run, even if someone runs the playbook in check mode.
+#Important for bootstrap tasks like installing Python — you really want them executed.
