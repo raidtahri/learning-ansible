@@ -86,6 +86,7 @@ instances = {
     instance_type = "t3.micro"
     subnet_role   = "public"
     # iam_instance_profile = "web-server-profile"
+    script_name = entry-script.sh
     extra_tags = {
       Backup = "true"
     }
@@ -95,6 +96,7 @@ instances = {
     instance_type = "t3.micro"
     subnet_role   = "public"
     # iam_instance_profile = "monitoring-server-profile"
+    script_name = entry-script.sh
     extra_tags = {
       ManagedBy = "Terraform"
       Backup    = "true"

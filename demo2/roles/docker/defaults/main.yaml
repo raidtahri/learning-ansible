@@ -1,8 +1,8 @@
 docker_users:
   - ec2-user
-compose_version: "2.25.0"
+compose_version: "v2.40.0"
 
 arch_map:
-  x86_64: "x86_64"
-  aarch64: "aarch64"
-  armv7l: "armv7"
+  x86_64: "linux-x86_64"
+  aarch64: "linux-aarch64"
+  armv7l: "linux-armv7"

@@ -80,6 +80,7 @@ resource "aws_instance" "this" {
   iam_instance_profile        = each.value.iam_instance_profile
   key_name                    = aws_key_pair.this.key_name
 /*or simply key_name   = "myapp-key" */
+user_data = each.value.script_name !=  null ? file("${path.module}/scripts/${each.value.script_name}") : null
   lifecycle {
     create_before_destroy     = true
     ignore_changes            = [ami]

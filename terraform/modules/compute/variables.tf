@@ -38,6 +38,7 @@ variable "instances" {
         instance_type        = string
         subnet_role          = string
         iam_instance_profile = optional(string)
+        script_name          = optional(string)
         extra_tags           = optional(map(string), {}) #string when each element has same type -string-
     }))
 }
