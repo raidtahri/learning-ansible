@@ -73,6 +73,7 @@ inventory/*.yaml
 inventory/*.yml
 group_vars/*/vault.yml
 host_vars/*/vault.yml
+collections/
 
 
 ############################################
@@ -115,6 +116,7 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.pyc
 .Python
 env/
 venv/
