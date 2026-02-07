@@ -83,7 +83,7 @@ resource "aws_instance" "this" {
 user_data = each.value.script_name !=  null ? file("${path.module}/scripts/${each.value.script_name}") : null
   lifecycle {
     create_before_destroy     = true
-    ignore changes            = [ami]
+    ignore_changes            = [ami]
   }
 
   tags                        = merge( 
