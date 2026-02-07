@@ -17,7 +17,7 @@ output "app-server-infos" {
   value = module.compute.server-infos["web-server"]
 }
 output "monitoring-server-infos" {
-  value = module.compute.server-infos["monitoring-server"]
+  value = module.compute.server-infos["ansible-server"]
 }
 
 
